@@ -1,4 +1,5 @@
-# Creating Our First Module
+__all__ = ["extract_upper"]
+
 def extract_upper(phrase):
     return list(filter(str.isupper, phrase))
 
