@@ -4,3 +4,6 @@ def extract_upper(phrase):
 
 def extract_lower(phrase):
     return list(filter(str.islower, phrase))
+
+if __name__ == "__main__":
+    print("HELLO FROM HELPERS")

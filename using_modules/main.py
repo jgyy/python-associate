@@ -1,6 +1,8 @@
 # python -m using_modules.main
-from using_modules.helpers import extract_lower as e_low, extract_upper as e_up
+from using_modules.helpers import extract_upper, extract_lower
+import using_modules.extras as extras
 
-name = "Keith Thompson"
-print(f"Lowercase letters: {e_low(name)}")
-print(f"Uppercase letters: {e_up(name)}")
+print(f"__name__ in main.py: {__name__}")
+
+print(f"Lowercase letters: {extract_lower(extras.name)}")
+print(f"Uppercase letters: {extract_upper(extras.name)}")
