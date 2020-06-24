@@ -4,7 +4,9 @@ class Vehicle:
     """
     default_tire = 'tire'
 
-    def __init__(self, engine, tires):
+    def __init__(self, engine="", tires="", distance_traveled=0, unit='miles'):
+        self.distance_traveled = distance_traveled
+        self.unit = unit
         self.engine = engine
         self.tires = tires
         self.serial_number = ''
@@ -16,7 +18,7 @@ class Vehicle:
         return cls(None, tires)
 
     def description(self):
-        print(f"A vehicle with an {self.engine} engine, and {self.tires} tires")
+        return f"A {self.__class__.__name__} that has traveled {self.distance_traveled} {self.unit}"
 
 
 if __name__ == "__main__":
