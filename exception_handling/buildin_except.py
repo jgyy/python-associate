@@ -1,0 +1,8 @@
+err = Exception('something went wrong')
+print(err)
+print(str(err))
+print(dir(err))
+print(Exception.__subclasses__())
+print(Exception.__bases__)
+print(BaseException.__bases__)
+print(BaseException.__subclasses__())
