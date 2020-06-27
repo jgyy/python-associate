@@ -15,12 +15,14 @@ class Employee:
         if not file_name:
             file_name = cls.default_db_file
 
-        with open(file_name, "r") as f:
-            lines = [
-                # TODO check this index int for potential errors
-                line.strip("\n").split(",") + [index + 1]
-                for index, line in enumerate(f.readlines())
-            ]
+        try:
+            with open(file_name, "r") as f:
+                lines = [
+                    line.strip("\n").split(",") + [index + 1]
+                    for index, line in enumerate(f.readlines())
+                ]
+        except (FileNotFoundError, PermissionError) as err:
+            raise DatabaseError(str(err))
 
         for line in lines:
             results.append(cls(*line))
@@ -32,10 +34,17 @@ class Employee:
         if not file_name:
             file_name = cls.default_db_file
 
-        with open(file_name, 'r') as f:
-            line = f.readlines()[line_number - 1]
-            attrs = line.strip("\n").split(',') + [line_number]
-            return cls(*attrs)
+        try:
+            with open(file_name, "r") as f:
+                line = [
+                    line.strip("\n").split(",") + [index + 1]
+                    for index, line in enumerate(f.readlines())
+                ][line_number - 1]
+                return cls(*line)
+        except IndexError:
+            raise MissingEmployeeError(f"no employee at line {line_number}")
+        except (FileNotFoundError, PermissionError) as err:
+            raise DatabaseError(str(err))
 
     def email_signature(self, include_phone=False):
         signature = f"{self.name} - {self.title}\n{self.email_address}"
@@ -47,14 +56,19 @@ class Employee:
         if not file_name:
             file_name = self.default_db_file
 
-        with open(file_name, "r+") as f:
-            lines = f.readlines()
-            if self.identifier:
-                lines[self.identifier - 1] = self._database_line()
-            else:
-                lines.append(self._database_line())
-            f.seek(0)
-            f.writelines(lines)
+        try:
+            with open(file_name, "r+") as f:
+                lines = f.readlines()
+                if self.identifier:
+                    lines[self.identifier - 1] = self._database_line()
+                else:
+                    lines.append(self._database_line())
+                f.seek(0)
+                f.writelines(lines)
+        except IndexError:
+            raise MissingEmployeeError(f"no employee at line {self.identifier}")
+        except (FileNotFoundError, PermissionError) as err:
+            raise DatabaseError(str(err))
 
     def _database_line(self):
         return (
@@ -63,3 +77,9 @@ class Employee:
             )
             + "\n"
         )
+
+class MissingEmployeeError(Exception):
+    pass
+
+class DatabaseError(Exception):
+    pass
